@@ -10,34 +10,29 @@ https://jdvelasq.github.io/courses/notebooks/sklearn_supervised_10_neural_networ
 
 import pandas as pd
 
-
 def pregunta_01():
     """
     Carga y separación de los datos en `X` `y`
     """
     # Lea el archivo `concrete.csv` y asignelo al DataFrame `df`
-    df = ____  
+    df = pd.read_csv('concrete.csv', sep=',')  
 
     # Asigne la columna `strength` a la variable `y`.
-    ____ = ____  
-
+    y = df['strength']
     # Asigne una copia del dataframe `df` a la variable `X`.
-    ____ = ____.____(____)  
-
+    x = df.copy()
     # Remueva la columna `strength` del DataFrame `X`.
-    ____.____(____)  
-
+    x = df.drop('strength',  axis=1)   
     # Retorne `X` y `y`
     return x, y
-
-
+print(pregunta_01())
 def pregunta_02():
     """
     Preparación del dataset.
     """
 
     # Importe train_test_split
-    from ____ import ____
+    from sklearn.model_selection import train_test_split
 
     # Cargue los datos de ejemplo y asigne los resultados a `X` y `y`.
     x, y = pregunta_01()
@@ -49,11 +44,11 @@ def pregunta_02():
         x_test,  
         y_train,  
         y_test,  
-    ) = ____(  
-        ____,  
-        ____,  
-        test_size=____,  
-        random_state=____,  
+    ) = train_test_split(  
+        x,  
+        y,  
+        test_size=0.25,  
+        random_state=12453,  
     )  
 
     # Retorne `X_train`, `X_test`, `y_train` y `y_test`
@@ -68,7 +63,9 @@ def pregunta_03():
     # Importe MLPRegressor
     # Importe MinMaxScaler
     # Importe Pipeline
-    from ____ import ____
+    from sklearn.neural_network import MLPRegressor
+    from sklearn.preprocessing import MinMaxScaler
+    from sklearn.pipeline import Pipeline
 
     # Cree un pipeline que contenga un estimador MinMaxScaler y un estimador
     # MLPRegressor
@@ -76,11 +73,11 @@ def pregunta_03():
         steps=[
             (
                 "minmaxscaler",
-                ____(___),  
+                MinMaxScaler(),  
             ),
             (
                 "mlpregressor",
-                ____(____),  
+                MLPRegressor(),  
             ),
         ],
     )
@@ -96,7 +93,7 @@ def pregunta_04():
 
     # Importe GridSearchCV
     from sklearn.model_selection import GridSearchCV
-
+    from sklearn.metrics import f1_score as r2  
     # Cree una malla de búsqueda para el objecto GridSearchCV
     # con los siguientes parámetros de búesqueda:
     #   * De 1 a 8 neuronas en la capa oculta
@@ -107,15 +104,15 @@ def pregunta_04():
     #   * Un máximo de 5000 iteraciones
     #   * Use parada temprana
 
-    param_grid = {
-        ___: ____,  
-        ___: ____,  
-        ___: ____,  
-        ___: ____,  
-        ___: ____,  
-        ___: ____,  
-        ___: ____,  
-    }
+    param_grid = [{
+        'mlpregressor__hidden_layer_sizes': list(range(1,8)),
+        "mlpregressor__activation" : ["relu"],  
+        "mlpregressor__learning_rate": ["adaptive"],  
+        "mlpregressor__momentum": [0.7, 0.8, 0.9],  
+        "mlpregressor__learning_rate_init": [0.01, 0.05, 0.1,],  
+        "mlpregressor__max_iter": [5000],  
+        "mlpregressor__early_stopping": [True],  
+    }]
 
     estimator = pregunta_03()
 
@@ -126,7 +123,7 @@ def pregunta_04():
     gridsearchcv = GridSearchCV(
         estimator=estimator,
         param_grid=param_grid,
-        ___ = ____  
+        ___ = ____,  
         ___ = ____  
     )
 
