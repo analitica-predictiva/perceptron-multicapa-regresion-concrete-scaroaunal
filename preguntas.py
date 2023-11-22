@@ -93,7 +93,7 @@ def pregunta_04():
 
     # Importe GridSearchCV
     from sklearn.model_selection import GridSearchCV
-    from sklearn.metrics import f1_score as r2  
+
     # Cree una malla de búsqueda para el objecto GridSearchCV
     # con los siguientes parámetros de búesqueda:
     #   * De 1 a 8 neuronas en la capa oculta
@@ -123,9 +123,8 @@ def pregunta_04():
     gridsearchcv = GridSearchCV(
         estimator=estimator,
         param_grid=param_grid,
-        ___ = ____,  
-        ___ = ____  
-    )
+        cv = 5,  
+        scoring ="r2")
 
     return gridsearchcv
 
@@ -136,7 +135,7 @@ def pregunta_05():
     """
 
     # Importe mean_squared_error
-    from ____ import ____
+    from sklearn.metrics import mean_squared_error
 
     # Cargue las variables.
     x_train, x_test, y_train, y_test = pregunta_02()
@@ -148,17 +147,17 @@ def pregunta_05():
     estimator.fit(x_train, y_train)  #
 
     # Pronostique para las muestras de entrenamiento y validacion
-    y_trian_pred = ____.____(____)  
-    y_test_pred = ____.____(____)  
+    y_trian_pred = estimator.predict(x_train)  
+    y_test_pred = estimator.predict(x_test)  
 
     # Calcule el error cuadrático medio de las muestras
-    mse_train = ____(  
-        ___,  
-        ___,  
+    mse_train = mean_squared_error(  
+        y_train,  
+        y_trian_pred,  
     )
-    mse_test = ____(  
-        ___,  
-        ___,  
+    mse_test = mean_squared_error(  
+        y_test,  
+        y_test_pred,  
     )
 
     # Retorne el mse de entrenamiento y prueba
